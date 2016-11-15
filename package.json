@@ -1,0 +1,23 @@
+{
+  "name": "@inhabit/angular2",
+  "version": "0.0.0",
+  "description": "InHabit angular2 modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ArkadiumInk/node-inhabit-angular2.git"
+  },
+  "keywords": [
+    "angular2",
+    "inhabit"
+  ],
+  "author": "rand0me",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ArkadiumInk/node-inhabit-angular2/issues"
+  },
+  "homepage": "https://github.com/ArkadiumInk/node-inhabit-angular2#readme"
+}
