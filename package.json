@@ -1,9 +1,13 @@
 {
-  "name": "@inhabit/angular2",
-  "version": "0.0.0",
+  "name": "inhabit-widget-preview",
+  "version": "0.0.1",
   "description": "InHabit angular2 modules",
   "main": "index.js",
+  "module": "index.js",
+  "typings": "index.d.ts",
   "scripts": {
+    "build": "ngc -p tsconfig.json",
+    "postbuild": "cp package.json README.md dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -14,10 +18,26 @@
     "angular2",
     "inhabit"
   ],
-  "author": "rand0me",
-  "license": "ISC",
+  "author": {
+    "name": "Arkadium",
+    "url": "https://arkadium.com/"
+  },
+  "license": "SEE LICENCE IN README.md",
   "bugs": {
     "url": "https://github.com/ArkadiumInk/node-inhabit-angular2/issues"
   },
-  "homepage": "https://github.com/ArkadiumInk/node-inhabit-angular2#readme"
+  "homepage": "https://github.com/ArkadiumInk/node-inhabit-angular2#readme",
+  "devDependencies": {
+    "@angular/compiler": "^2.2.0",
+    "@angular/compiler-cli": "^2.2.0",
+    "@angular/core": "^2.2.0",
+    "rxjs": "^5.0.0-beta.12",
+    "typescript": "^2.0.9",
+    "zone.js": "^0.6.26"
+  },
+  "peerDependencies": {
+    "@angular/compiler": "^2.2.0",
+    "@angular/compiler-cli": "^2.2.0",
+    "@angular/core": "^2.2.0"
+  }
 }
