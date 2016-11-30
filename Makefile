@@ -1,7 +1,19 @@
-patch:
-  npm version patch
-  npm run build
-  git push --tags
-  git push origin master
-  cd dist
-  npm publish
+patch: build push-all version-patch publish
+
+build:
+	npm run build
+
+version-patch:
+	npm version patch
+
+push-all: push push-tags
+
+push:
+	git push origin master
+
+push-tags:
+	git push --tags
+
+publish:
+	cd dist
+	npm publish
