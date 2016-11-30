@@ -21,10 +21,6 @@ export class WidgetConfigurationService {
     const id = this.simpleUUID(),
       config = new WidgetPreviewConfig();
 
-    config.set(new ComponentConfig('ModuleManager', {
-      cdn: `https://inhabitmaind.blob.core.windows.net/modulerepository/${module.name}/${module.version}/inhabitcfg.json`
-    }));
-
     config.set(new ComponentConfig('contentPresenter', [{
       id: 'inWidget',
       cfg: {

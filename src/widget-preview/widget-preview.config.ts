@@ -3,7 +3,7 @@ const DEFAULTS =
       {
         "id": "ModuleManager",
         "cfg": {
-          "cdn": "//inhabit-apps-service.azurewebsites.net/apps/get/cfg"
+          "cdn": "//inhabitmaind.blob.core.windows.net/modulerepository/"
         }
       },
       {

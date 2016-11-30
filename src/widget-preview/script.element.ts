@@ -4,7 +4,7 @@ const ELEMENT_NAME = 'script',
     DEFAULT_ATTRS = {
         async: 'TRUE',
         type: 'text/javascript',
-        src: '//inhabit-widget-service-dev.azurewebsites.net/Widget/v1'
+        src: '//inhabit-widget-features.azurewebsites.net/js/ark-main.js'
     };
 
 export class ScriptElement {
