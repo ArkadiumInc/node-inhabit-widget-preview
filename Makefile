@@ -15,5 +15,3 @@ push-tags:
 	git push --tags
 
 publish:
-	cd dist
-	npm publish
