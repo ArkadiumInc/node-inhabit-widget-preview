@@ -3,15 +3,15 @@ const DEFAULTS =
       {
         "id": "ModuleManager",
         "cfg": {
-          "cdn": "//inhabitmaind.blob.core.windows.net/modulerepository/"
+          "cdn": "//inhabitmaindev.akamaized.net/modulerepository"
         }
       },
       {
         "id": "application",
         "cfg": {
-          "cssUrl": [ "/css/ark-app.css" ],
+          "cssUrl": [ "//inhabit-widget-features.azurewebsites.net/css/ark-app.css" ],
           "cacheTimeSec": "300",
-          "cdnUrl": "//inhabitmainlive.blob.core.windows.net/"
+          "cdnUrl": ""
         }
       },
       {

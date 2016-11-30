@@ -39,7 +39,7 @@ export class Module {
   public toConfig(): any {
     let config = JSON.parse(JSON.stringify(this.config));
     config.id = this.name;
-    config.version = this.version;
+    config.v = this.version;
     return config;
   }
 
