@@ -22,7 +22,7 @@ export class WidgetConfigurationService {
       config = new WidgetPreviewConfig();
 
     config.set('ModuleManager', new ComponentConfig('ModuleManager', {
-      cdn: `https://inhabitmaind.blob.core.windows.net/modulerepository/${moduleConfig.id}/${moduleConfig.version}/inhabitcfg.json`
+      cdn: `https://inhabitmaind.blob.core.windows.net/modulerepository/${module.name}/${module.version}/inhabitcfg.json`
     }));
 
     config.set(new ComponentConfig('contentPresenter', [{
