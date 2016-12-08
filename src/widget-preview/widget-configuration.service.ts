@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { WidgetPreviewConfig, ComponentConfig } from './widget-preview.config';
-import { Module }                               from './widget-module';
+import { WidgetConfiguration } from './widget-configuration.model';
 
 const STORAGE_NAME = '__ark_app__';
 
@@ -17,18 +16,9 @@ export class WidgetConfigurationService {
     this.storage.configurations = this.storage.configurations || {};
   }
 
-  build(module: Module) {
-    const id = this.simpleUUID(),
-      config = new WidgetPreviewConfig();
-
-    config.set(new ComponentConfig('contentPresenter', [{
-      id: 'inWidget',
-      cfg: {
-        modules: [ module.toConfig() ]
-      }
-    }]));
-
-    this.storage.configurations[id] = config.toArray();
+  build(widget: WidgetConfiguration) {
+    const id = this.simpleUUID();
+    this.storage.configurations[id] = JSON.parse(JSON.stringify(widget.configuration));
     return '__ark_app__:' + id;
   }
 
