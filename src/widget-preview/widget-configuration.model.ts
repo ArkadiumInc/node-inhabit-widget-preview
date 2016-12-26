@@ -6,7 +6,7 @@ import { Module } from './module.model';
 
 export class WidgetConfiguration {
   id: string;
-  configuration;
+  configuration: any;
   modules: Array<any>;
 
   onChange: EventEmitter<any> = new EventEmitter();
@@ -14,8 +14,8 @@ export class WidgetConfiguration {
   constructor() {
     this.configuration = JSON.parse(jsonConfigExample);
     this.modules = this.configuration
-      .find(component => component.id === 'contentPresenter')
-      .cfg.find(subComponent=> subComponent.id === 'inWidget').cfg.modules;
+      .find((component: any) => component.id === 'contentPresenter')
+      .cfg.find((subComponent: any) => subComponent.id === 'inWidget').cfg.modules;
   }
 
   /**

@@ -9,9 +9,9 @@ const ELEMENT_NAME = 'script',
 
 export class ScriptElement {
     public nativeElement: any;
-    private attributes: Map<string, string> = new Map();
+    private attributes: Map<any, any> = new Map();
 
-    constructor(attributes) {
+    constructor(attributes: any) {
         this.setAttributes(DEFAULT_ATTRS);
         this.setAttributes(attributes);
     }

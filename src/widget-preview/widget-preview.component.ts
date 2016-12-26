@@ -8,7 +8,7 @@ import { WidgetConfiguration }        from './widget-configuration.model';
   selector: 'inhabit-widget-preview',
   template: ''
 })
-export class WidgetPreviewComponent {
+export class WidgetPreviewComponent implements OnChanges{
   @Input('widgetConfiguration') widget: WidgetConfiguration;
   @Input('contextualUrl') contextualUrl: string;
   @Output('ready') ready: EventEmitter<any> = new EventEmitter();
@@ -17,7 +17,7 @@ export class WidgetPreviewComponent {
   constructor(private elementRef: ElementRef, private configurationService: WidgetConfigurationService) {
   }
 
-  ngOnChanges() {
+  ngOnChanges(changes: any) {
     // Subscribe on widget changes
     this.widget.onChange.subscribe(() => this.render());
     this.render();
@@ -37,8 +37,8 @@ export class WidgetPreviewComponent {
     });
 
     script.appendTo(this.elementRef);
-    script.nativeElement.onload = e => this.ready.emit(e);
-    script.nativeElement.onerror = e => this.error.emit(e);
+    script.nativeElement.onload = (e: any) => this.ready.emit(e);
+    script.nativeElement.onerror = (e: any) => this.error.emit(e);
   }
 
   clean() {
