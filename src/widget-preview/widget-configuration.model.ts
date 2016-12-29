@@ -1,6 +1,3 @@
-import { EventEmitter } from '@angular/core';
-
-import { jsonConfigExample } from './jsonConfigExample';
 import { ModuleConfiguration } from './module-configuration.model';
 import { Module } from './module.model';
 
@@ -9,13 +6,9 @@ export class WidgetConfiguration {
   configuration: any;
   modules: Array<any>;
 
-  onChange: EventEmitter<any> = new EventEmitter();
-
   constructor() {
-    this.configuration = JSON.parse(jsonConfigExample);
-    this.modules = this.configuration
-      .find((component: any) => component.id === 'contentPresenter')
-      .cfg.find((subComponent: any) => subComponent.id === 'inWidget').cfg.modules;
+    this.configuration = [];
+    this.modules = [];
   }
 
   /**
@@ -25,7 +18,6 @@ export class WidgetConfiguration {
    */
   public addModuleFromConfig(moduleConfig: ModuleConfiguration) {
     this.modules.push(moduleConfig);
-    this.emitChanges();
     return moduleConfig;
   }
 
@@ -37,7 +29,6 @@ export class WidgetConfiguration {
   public addModuleFromModel(moduleModel: Module) {
     const config = ModuleConfiguration.fromModule(moduleModel);
     this.modules.push(config);
-    this.emitChanges();
     return config;
   }
 
@@ -48,11 +39,6 @@ export class WidgetConfiguration {
   public removeModule(module: ModuleConfiguration) {
     let index = this.modules.indexOf(module);
     this.modules.splice(index, 1);
-    this.emitChanges();
   }
 
-  public emitChanges() {
-    this.onChange.emit();
-  }
-  
 }

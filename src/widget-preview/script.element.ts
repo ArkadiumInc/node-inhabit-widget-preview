@@ -1,17 +1,25 @@
 import { ElementRef } from '@angular/core';
 
+const SCRIPT_SOURCES = {
+    live: '//inhabit-widget-service.azurewebsites.net/Widget/v1/',
+    dev: '//inhabit-widget-service-dev.azurewebsites.net/Widget/v1/'
+};
+
 const ELEMENT_NAME = 'script',
     DEFAULT_ATTRS = {
         async: 'TRUE',
         type: 'text/javascript',
-        src: '//inhabit-widget-features.azurewebsites.net/js/ark-main.js'
+        src: SCRIPT_SOURCES.dev
     };
 
 export class ScriptElement {
     public nativeElement: any;
     private attributes: Map<any, any> = new Map();
 
-    constructor(attributes: any) {
+    constructor(attributes: any, environment?: string) {
+        if (environment) {
+            attributes.src = SCRIPT_SOURCES[environment];
+        }
         this.setAttributes(DEFAULT_ATTRS);
         this.setAttributes(attributes);
     }
