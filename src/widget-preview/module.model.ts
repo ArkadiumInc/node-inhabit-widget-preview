@@ -9,7 +9,14 @@ export class Module {
   categories: Array<string>;
   uniqueVersionsCount: string;
   version: string;
-  status: number;
+  status: string;
+  reviews: Array<{
+    administratorId: string,
+    administratorRole: string,
+    status: string,
+    message: string,
+    reportUrl: string
+  }>;
   jsonSchema: {
     form: any,
     options: any,
@@ -39,6 +46,7 @@ export class Module {
     this.uniqueVersionsCount = moduleData.uniqueVersionsCount;
     this.version = moduleData.version;
     this.status = moduleData.status;
+    this.reviews = moduleData.reviews;
     this.jsonSchema = moduleData.jsonSchema;
     this.defaultConfiguration = moduleData.defaultConfiguration;
     this.exampleContextualUrl = moduleData.exampleContextualUrl;
