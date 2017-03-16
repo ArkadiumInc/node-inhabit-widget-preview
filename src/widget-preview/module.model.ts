@@ -12,6 +12,7 @@ export class Module {
   status: string;
   reviews: Array<{
     administratorId: string,
+    administratorName: string,
     administratorRole: string,
     status: string,
     message: string,
