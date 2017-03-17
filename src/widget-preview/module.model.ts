@@ -7,6 +7,11 @@ export class Module {
   badges: Array<string>;
   developerGroupId: string;
   categories: Array<string>;
+  changeLog: Array<{
+    action: string;
+    actor: string;
+    timeStamp: any
+  }>;
   uniqueVersionsCount: string;
   version: string;
   status: string;
@@ -41,13 +46,14 @@ export class Module {
     this.title = moduleData.title;
     this.description = moduleData.description;
     this.imageUrl = moduleData.imageUrl;
-    this.badges = moduleData.badges;
+    this.badges = moduleData.badges || [];
     this.developerGroupId = moduleData.developerGroupId;
-    this.categories = moduleData.categories;
+    this.categories = moduleData.categories || [];
+    this.changeLog = moduleData.changeLog || [];
     this.uniqueVersionsCount = moduleData.uniqueVersionsCount;
     this.version = moduleData.version;
     this.status = moduleData.status;
-    this.reviews = moduleData.reviews;
+    this.reviews = moduleData.reviews || [];
     this.jsonSchema = moduleData.jsonSchema;
     this.defaultConfiguration = moduleData.defaultConfiguration;
     this.exampleContextualUrl = moduleData.exampleContextualUrl;
