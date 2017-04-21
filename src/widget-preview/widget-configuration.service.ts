@@ -27,19 +27,32 @@ export class WidgetConfigurationService {
     this.storage.configurations = this.storage.configurations || {};
   }
 
-  build(configuration: any, widget: WidgetConfiguration) {
+  processWidget(widget: WidgetConfiguration, environment: string): Observable<string> {
+    if (widget.configuration && widget.configuration.length) {
+      return Observable.of(this.exportConfig(widget.configuration));
+    } else if (widget.modules && widget.modules.length) {
+      return this.fetchConfiguration(environment)
+        .map(configuration => {
+          // Get reference of modules array in config and fill it from widget
+          let modules = WidgetConfiguration.getModulesFromConfiguration(configuration);
+
+          modules.length = 0;
+          widget.modules.forEach(widgetModule => modules.push(widgetModule));
+
+          return this.exportConfig(configuration);
+        });
+    } else {
+      return Observable.throw('Nor valid configuration, nor valid modules were provided');
+    }
+  }
+
+  exportConfig(configuration: any) {
     const id = this.simpleUUID();
-
-    configuration
-      .find((component: any) => component.id === 'contentPresenter')
-      .cfg.find((subComponent: any) => subComponent.id === 'inWidget')
-      .cfg.modules = widget.modules;
-
     this.storage.configurations[id] = configuration;
     return '__ark_app__:' + id;
   }
 
-  public fetchConfiguration(environment: string = 'dev'): Observable<any>{
+  public fetchConfiguration(environment: string): Observable<any> {
     if (this.configurationsCache[environment]) {
       return Observable.of(this.configurationsCache[environment]);
     }
@@ -49,7 +62,7 @@ export class WidgetConfigurationService {
       .map((response: Response) => {
         return this.configurationsCache[environment] = response.json();
       })
-      .catch(error => Observable.throw(error.json() && error.json().Message  || 'Server error'));
+      .catch(error => Observable.throw(error.json() && error.json().Message || 'Server error'));
   }
 
   public simpleUUID(): string {

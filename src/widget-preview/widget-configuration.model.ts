@@ -3,12 +3,14 @@ import { Module } from './module.model';
 
 export class WidgetConfiguration {
   id: string;
-  configuration: any;
-  modules: Array<any>;
+  configuration: Array<any>;
+  modules: Array<any> = [];
 
-  constructor() {
-    this.configuration = [];
-    this.modules = [];
+  public setConfiguration(configuration: any) {
+    // Ensure that incoming configuration is valid
+    WidgetConfiguration.getModulesFromConfiguration(configuration)
+      .forEach(module => this.addModuleFromConfig(module));
+    this.configuration = configuration;
   }
 
   /**
@@ -39,6 +41,19 @@ export class WidgetConfiguration {
   public removeModule(module: ModuleConfiguration) {
     let index = this.modules.indexOf(module);
     this.modules.splice(index, 1);
+  }
+
+  static getModulesFromConfiguration(configuration: any): Array<any> {
+    try {
+      let componentConfig = configuration.find((component: {id: string, cfg: any}) => component.id === 'contentPresenter');
+
+      let layoutConfig = componentConfig.cfg.find((layout: {id: string, cfg: any}) => layout.id === 'inWidget');
+
+      return layoutConfig.cfg['modules'];
+    }
+    catch (err) {
+      throw Error(['Provided configuration is not valid', err.message].join());
+    }
   }
 
 }

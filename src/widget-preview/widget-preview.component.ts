@@ -13,8 +13,9 @@ const ENVS = {dev: 'dev', qa: 'qa', live: 'live'};
   template: ''
 })
 export class WidgetPreviewComponent {
-  @Input('env') env: string = ENVS.dev;
+  @Input('env') env: string = ENVS.live;
   @Input('widgetConfiguration') widget: WidgetConfiguration;
+  @Input('applicationId') applicationId: string;
   @Input('contextualUrl') contextualUrl: string;
   @Output('ready') ready: EventEmitter<any> = new EventEmitter();
   @Output('error') error: EventEmitter<any> = new EventEmitter();
@@ -30,21 +31,37 @@ export class WidgetPreviewComponent {
       return;
     }
 
-    if (!this.widget) {
-      this.error.emit(this.widget);
+    if (!this.widget && !this.applicationId) {
+      this.error.emit('No widget configuration or application id was provided');
       return;
     }
 
-    this.configurationService.fetchConfiguration(this.env)
-      .map(configuration => new ScriptElement({
-        'data-ark-configuration': this.configurationService.build(configuration, this.widget),
+    // By widget (configuration | modules)
+    if (this.widget) {
+      this.configurationService.processWidget(this.widget, this.env)
+        .map(arkAppId => new ScriptElement({
+          'data-ark-configuration': arkAppId,
+          'data-ark-contextual-url': this.contextualUrl
+        }, this.env))
+        .do(script => this.appendScript(script))
+        .catch(error => Observable.of(this.error.emit(error)))
+        .subscribe();
+    }
+
+    // By application id
+    if (this.applicationId) {
+      let script = new ScriptElement({
+        'data-ark-client': this.applicationId,
         'data-ark-contextual-url': this.contextualUrl
-      }, this.env))
-      .do(script => script.appendTo(this.elementRef))
-      .do(script => script.nativeElement.onload = (e: any) => this.ready.emit(e))
-      .do(script => script.nativeElement.onerror = (e: any) => this.error.emit(e))
-      .catch(error => Observable.of(this.error.emit(error)))
-      .subscribe();
+      }, this.env);
+      this.appendScript(script)
+    }
+  }
+
+  private appendScript(script: any) {
+    script.appendTo(this.elementRef);
+    script.nativeElement.onload = (e: any) => this.ready.emit(e);
+    script.nativeElement.onerror = (e: any) => this.error.emit(e);
   }
 
   clean() {
