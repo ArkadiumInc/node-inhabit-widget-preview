@@ -19,6 +19,9 @@
       "node_modules/@types"
     ]
   },
+  "files": [
+    "index.ts"
+  ],
   "angularCompilerOptions": {
     "genDir": "../dist",
     "debug": true

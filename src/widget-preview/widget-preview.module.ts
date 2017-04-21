@@ -1,12 +1,13 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders }  from '@angular/core';
+import { HttpModule }                     from '@angular/http';
 
 import { WidgetPreviewComponent }     from './widget-preview.component';
 import { WidgetConfigurationService } from './widget-configuration.service';
-import { WidgetConfiguration } from './widget-configuration.model';
 
 @NgModule({
+  imports: [ HttpModule ],
   declarations: [ WidgetPreviewComponent ],
-  providers: [ WidgetConfigurationService, WidgetConfiguration ],
+  providers: [ WidgetConfigurationService ],
   exports: [ WidgetPreviewComponent ]
 })
 export class WidgetPreviewModule {
