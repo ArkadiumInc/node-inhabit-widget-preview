@@ -34,10 +34,10 @@ export class WidgetConfigurationService {
       return this.fetchConfiguration(environment)
         .map(configuration => {
           // Get reference of modules array in config and fill it from widget
-          let modules = WidgetConfiguration.getModulesFromConfiguration(configuration);
+          let modulesRef = WidgetConfiguration.getModulesFromConfiguration(configuration);
 
-          modules.length = 0;
-          widget.modules.forEach(widgetModule => modules.push(widgetModule));
+          modulesRef.length = 0;
+          Array.prototype.push.apply(modulesRef, widget.modules);
 
           return this.exportConfig(configuration);
         });
@@ -48,7 +48,8 @@ export class WidgetConfigurationService {
 
   exportConfig(configuration: any) {
     const id = this.simpleUUID();
-    this.storage.configurations[id] = configuration;
+    // Clone configuration, to prevent mutation
+    this.storage.configurations[id] = JSON.parse(JSON.stringify(configuration));
     return '__ark_app__:' + id;
   }
 
