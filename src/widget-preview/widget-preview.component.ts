@@ -14,6 +14,7 @@ const ENVS = {dev: 'dev', qa: 'qa', live: 'live'};
 })
 export class WidgetPreviewComponent {
   @Input('env') env: string = ENVS.live;
+  @Input('debug') debug: boolean = false;
   @Input('widgetConfiguration') widget: WidgetConfiguration;
   @Input('applicationId') applicationId: string;
   @Input('contextualUrl') contextualUrl: string;
@@ -41,7 +42,8 @@ export class WidgetPreviewComponent {
       this.configurationService.processWidget(this.widget, this.env)
         .map(arkAppId => new ScriptElement({
           'data-ark-configuration': arkAppId,
-          'data-ark-contextual-url': this.contextualUrl
+          'data-ark-contextual-url': this.contextualUrl,
+          'data-ark-log': this.debug
         }, this.env))
         .do(script => this.appendScript(script))
         .catch(error => Observable.of(this.error.emit(error)))
