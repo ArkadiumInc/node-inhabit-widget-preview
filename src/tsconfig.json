@@ -17,11 +17,9 @@
     "suppressImplicitAnyIndexErrors": true,
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "rootDir": "./"
   },
-  "files": [
-    "index.ts"
-  ],
   "angularCompilerOptions": {
     "genDir": "../dist",
     "debug": true
