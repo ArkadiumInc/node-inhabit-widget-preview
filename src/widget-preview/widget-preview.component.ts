@@ -39,12 +39,8 @@ export class WidgetPreviewComponent {
 
     // By widget (configuration | modules)
     if (this.widget) {
-      this.configurationService.processWidget(this.widget, this.env)
-        .map(arkAppId => new ScriptElement({
-          'data-ark-configuration': arkAppId,
-          'data-ark-contextual-url': this.contextualUrl,
-          'data-ark-log': this.debug
-        }, this.env))
+      this.configurationService.exportWidgetConfig(this.widget, this.env)
+        .map(appId => new ScriptElement(appId, this.contextualUrl, this.debug, this.env))
         .do(script => this.appendScript(script))
         .catch(error => Observable.of(this.error.emit(error)))
         .subscribe();
@@ -52,10 +48,7 @@ export class WidgetPreviewComponent {
 
     // By application id
     if (this.applicationId) {
-      let script = new ScriptElement({
-        'data-ark-client': this.applicationId,
-        'data-ark-contextual-url': this.contextualUrl
-      }, this.env);
+      let script = new ScriptElement(this.applicationId, this.contextualUrl, this.debug, this.env);
       this.appendScript(script)
     }
   }

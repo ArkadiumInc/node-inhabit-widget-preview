@@ -16,10 +16,20 @@ export class ScriptElement {
     public nativeElement: any;
     private attributes: Map<any, any> = new Map();
 
-    constructor(attributes: any, environment?: string) {
+    constructor(applicationId: string, contextualUrl: string, debug: boolean, environment: string) {
+        const attributes = {
+            'data-ark-configuration': applicationId,
+            'data-ark-contextual-url': contextualUrl
+        };
+
         if (environment) {
-            attributes.src = SCRIPT_SOURCES[environment];
+            attributes['src'] = SCRIPT_SOURCES[environment];
         }
+
+        if (debug) {
+            attributes['data-ark-log'] = debug;
+        }
+
         this.setAttributes(DEFAULT_ATTRS);
         this.setAttributes(attributes);
     }
