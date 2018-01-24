@@ -27,10 +27,12 @@ export class WidgetConfigurationService {
     this.storage.configurations = this.storage.configurations || {};
   }
 
-  processWidget(widget: WidgetConfiguration, environment: string): Observable<string> {
+  exportWidgetConfig(widget: WidgetConfiguration, environment: string): Observable<string> {
     if (widget.configuration && widget.configuration.length) {
+      // Widget already has config, just export it
       return Observable.of(this.exportConfig(widget.configuration));
     } else if (widget.modules && widget.modules.length) {
+      // Widget contain only modules, so fetch config, then combine it with modules and export
       return this.fetchConfiguration(environment)
         .map(configuration => {
           // Get reference of modules array in config and fill it from widget
