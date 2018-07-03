@@ -1,7 +1,7 @@
 {
   "name": "inhabit-widget-preview",
-  "version": "1.6.1",
-  "description": "InHabit angular2 modules",
+  "version": "6.0.0",
+  "description": "InHabit module for Angular",
   "main": "index.js",
   "module": "index.js",
   "typings": "index.d.ts",
@@ -38,9 +38,9 @@
     "@types/node": "^6.0.46",
     "gulp": "^3.9.1",
     "reflect-metadata": "^0.1.8",
-    "rxjs": "^5.0.0-beta.12",
+    "rxjs": "^6.2.1",
     "through-gulp": "^0.5.0",
-    "typescript": "^2.1.6",
+    "typescript": "2.7",
     "zone.js": "^0.6.26"
   }
 }
