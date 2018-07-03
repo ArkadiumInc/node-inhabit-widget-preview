@@ -39,19 +39,21 @@ export class WidgetPreviewComponent {
 
     // By widget (configuration | modules)
     if (this.widget) {
-      this.configurationService.exportWidgetConfig(this.widget, this.env)
+      this.configurationService.buildConfig(this.widget, this.env)
         .pipe(
+          map(config => this.configurationService.exportConfigGetAppId(config)),
           map(appId => new ScriptElement(appId, this.contextualUrl, this.debug, this.env)),
           tap(script => this.appendScript(script)),
           catchError(error => of(this.error.emit(error)))
         )
         .subscribe();
+      return;
     }
 
     // By application id
     if (this.applicationId) {
       let script = new ScriptElement(this.applicationId, this.contextualUrl, this.debug, this.env);
-      this.appendScript(script)
+      this.appendScript(script);
     }
   }
 
