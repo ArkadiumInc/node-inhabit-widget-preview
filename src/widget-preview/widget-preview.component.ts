@@ -1,12 +1,12 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import 'rxjs/add/observable/of';
+import { Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { ScriptElement }              from './script.element';
 import { WidgetConfigurationService } from './widget-configuration.service';
 import { WidgetConfiguration }        from './widget-configuration.model';
 
-const ENVS = {dev: 'dev', qa: 'qa', live: 'live'};
+const ENVS = { dev: 'dev', qa: 'qa', live: 'live' };
 
 @Component({
   selector: 'inhabit-widget-preview',
@@ -40,9 +40,11 @@ export class WidgetPreviewComponent {
     // By widget (configuration | modules)
     if (this.widget) {
       this.configurationService.exportWidgetConfig(this.widget, this.env)
-        .map(appId => new ScriptElement(appId, this.contextualUrl, this.debug, this.env))
-        .do(script => this.appendScript(script))
-        .catch(error => Observable.of(this.error.emit(error)))
+        .pipe(
+          map(appId => new ScriptElement(appId, this.contextualUrl, this.debug, this.env)),
+          tap(script => this.appendScript(script)),
+          catchError(error => of(this.error.emit(error)))
+        )
         .subscribe();
     }
 

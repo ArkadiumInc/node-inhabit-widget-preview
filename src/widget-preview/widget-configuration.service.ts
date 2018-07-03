@@ -1,9 +1,7 @@
-import { Injectable }     from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable }     from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import { WidgetConfiguration } from './widget-configuration.model';
 
@@ -21,7 +19,7 @@ export class WidgetConfigurationService {
   private storage: any;
   private configurationsCache: any = {};
 
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     global[STORAGE_NAME] = global[STORAGE_NAME] || {};
     this.storage = global[STORAGE_NAME];
     this.storage.configurations = this.storage.configurations || {};
@@ -30,11 +28,11 @@ export class WidgetConfigurationService {
   exportWidgetConfig(widget: WidgetConfiguration, environment: string): Observable<string> {
     if (widget.configuration && widget.configuration.length) {
       // Widget already has config, just export it
-      return Observable.of(this.exportConfig(widget.configuration));
+      return of(this.exportConfig(widget.configuration));
     } else if (widget.modules && widget.modules.length) {
       // Widget contain only modules, so fetch config, then combine it with modules and export
       return this.fetchConfiguration(environment)
-        .map(configuration => {
+        .pipe(map(configuration => {
           // Get reference of modules array in config and fill it from widget
           let modulesRef = WidgetConfiguration.getModulesFromConfiguration(configuration);
 
@@ -42,9 +40,9 @@ export class WidgetConfigurationService {
           Array.prototype.push.apply(modulesRef, widget.modules);
 
           return this.exportConfig(configuration);
-        });
+        }));
     } else {
-      return Observable.throw('Nor valid configuration, nor valid modules were provided');
+      return throwError('Nor valid configuration, nor valid modules were provided');
     }
   }
 
@@ -57,15 +55,15 @@ export class WidgetConfigurationService {
 
   public fetchConfiguration(environment: string): Observable<any> {
     if (this.configurationsCache[environment]) {
-      return Observable.of(this.configurationsCache[environment]);
+      return of(this.configurationsCache[environment]);
     }
     let url = CONFIG_SOURCES[environment];
 
     return this.http.get(url)
-      .map((response: Response) => {
-        return this.configurationsCache[environment] = response.json();
-      })
-      .catch(error => Observable.throw(error.json() && error.json().Message || 'Server error'));
+      .pipe(
+        map(res => this.configurationsCache[environment] = res),
+        catchError(error => throwError(error.json() && error.json().Message || 'Server error'))
+      );
   }
 
   public simpleUUID(): string {
