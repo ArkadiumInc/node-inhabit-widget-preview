@@ -1,7 +1,7 @@
 {
   "name": "inhabit-widget-preview",
-  "version": "1.6.1",
-  "description": "InHabit angular2 modules",
+  "version": "6.0.0",
+  "description": "InHabit module for Angular",
   "main": "index.js",
   "module": "index.js",
   "typings": "index.d.ts",
