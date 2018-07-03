@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 
 import { WidgetConfiguration } from './widget-configuration.model';
 
@@ -11,6 +11,8 @@ const CONFIG_SOURCES = {
   live: '//inhabit-widget-service.azurewebsites.net/Widget/v1/Settings?client=preview',
   dev: '//inhabit-widget-service-dev.azurewebsites.net/Widget/v1/Settings?client=preview',
 };
+
+const clone = (value: any) => JSON.parse(JSON.stringify(value));
 
 declare var global: any;
 
@@ -25,35 +27,29 @@ export class WidgetConfigurationService {
     this.storage.configurations = this.storage.configurations || {};
   }
 
-  exportWidgetConfig(widget: WidgetConfiguration, environment: string): Observable<string> {
+  buildConfig(widget: WidgetConfiguration, environment: string): Observable<any> {
+    // Widget already has config, just export it
     if (widget.configuration && widget.configuration.length) {
-      // Widget already has config, just export it
-      return of(this.exportConfig(widget.configuration));
-    } else if (widget.modules && widget.modules.length) {
-      // Widget contain only modules, so fetch config, then combine it with modules and export
+      return of(widget.configuration);
+    }
+
+    // Widget contain only modules, so fetch config, then combine it with modules and export
+    if (widget.modules && widget.modules.length) {
       return this.fetchConfiguration(environment)
-        .pipe(map(configuration => {
-          // Get reference of modules array in config and fill it from widget
-          let modulesRef = WidgetConfiguration.getModulesFromConfiguration(configuration);
-
-          modulesRef.length = 0;
-          Array.prototype.push.apply(modulesRef, widget.modules);
-
-          return this.exportConfig(configuration);
-        }));
+        .pipe(map(config => this.fillConfigWithModules(clone(config), widget)));
     } else {
       return throwError('Nor valid configuration, nor valid modules were provided');
     }
   }
 
-  exportConfig(configuration: any) {
+  exportConfigGetAppId(configuration: any): string {
     const id = this.simpleUUID();
     // Clone configuration, to prevent mutation
-    this.storage.configurations[id] = JSON.parse(JSON.stringify(configuration));
+    this.storage.configurations[id] = clone(configuration);
     return '__ark_app__:' + id;
   }
 
-  public fetchConfiguration(environment: string): Observable<any> {
+  private fetchConfiguration(environment: string): Observable<any> {
     if (this.configurationsCache[environment]) {
       return of(this.configurationsCache[environment]);
     }
@@ -61,9 +57,19 @@ export class WidgetConfigurationService {
 
     return this.http.get(url)
       .pipe(
-        map(res => this.configurationsCache[environment] = res),
+        tap(config => this.configurationsCache[environment] = config),
         catchError(error => throwError(error.json() && error.json().Message || 'Server error'))
       );
+  }
+
+  private fillConfigWithModules(config: any, widget: WidgetConfiguration): any {
+    // Get reference of modules array in config and fill it from widget
+    let modulesRef = WidgetConfiguration.getModulesFromConfiguration(config);
+
+    modulesRef.length = 0;
+    Array.prototype.push.apply(modulesRef, widget.modules);
+
+    return config;
   }
 
   public simpleUUID(): string {
